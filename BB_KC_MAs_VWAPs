@@ -114,19 +114,19 @@ KCsource1 = input(close, "1x MA source")
 KClength1 = input(21, "1x MA length", minval=1, step=5)
 KCma_type = input('ema', "1x MA type", options=['sma', 'ema', 'hma'])
 KCmult1 = input(1.0, "1x ATR multiplier", step=0.1)
-KCatr_length1 = input(0, "1x ATR length override", minval=1, step=5)
+KCatr_length1 = input(0, "1x ATR length override", minval=0, step=5)
 
 KCsource2 = input(close, "2x MA source")
 KClength2 = input(21, "2x MA length", minval=1, step=5)
 KCma_type2 = input('ema', "2x MA type", options=['sma', 'ema', 'hma'])
 KCmult2 = input(2.0, "2x ATR multiplier", step=0.1)
-KCatr_length2 = input(0, "2x ATR length override", minval=1, step=5)
+KCatr_length2 = input(0, "2x ATR length override", minval=0, step=5)
 
 KCsource3 = input(close, "3x MA source")
 KClength3 = input(21, "3x MA length", minval=1, step=5)
 KCma_type3 = input('ema', "3x MA type", options=['sma', 'ema', 'hma'])
 KCmult3 = input(3.0, "3x ATR multiplier", step=0.1)
-KCatr_length3 = input(0, "3x ATR length override", minval=1, step=5)
+KCatr_length3 = input(0, "3x ATR length override", minval=0, step=5)
 
 
 KCma1 = KCma_type == 'ema' ? ema(KCsource1, KClength1) : KCma_type == 'sma' ? sma(KCsource1, KClength1) : KCma_type == 'hma' ? hma(KCsource1, KClength1) : na
@@ -134,7 +134,7 @@ KCatr1 = atr(KCatr_length1 > 0 ? KCatr_length1 : KClength1)  // default atr len 
 KCupper1 = KCma1 + KCatr1 * KCmult1
 KClower1 = KCma1 - KCatr1 * KCmult1
 
-KCma2 = KCma_type2 == 'ema' ? ema(KCsource2, KClength2) : KCma_type == 'sma' ? sma(KCsource2, KClength2) : KCma_type == 'hma' ? hma(KCsource2, KClength2) : na
+KCma2 = KCma_type2 == 'ema' ? ema(KCsource2, KClength2) : KCma_type2 == 'sma' ? sma(KCsource2, KClength2) : KCma_type2 == 'hma' ? hma(KCsource2, KClength2) : na
 KCatr2 = atr(KCatr_length2 > 0 ? KCatr_length2 : KClength2)  // default atr len to ma len but allow override
 KCupper2 = KCma2 + KCatr2 * KCmult2
 KClower2 = KCma2 - KCatr2 * KCmult2
