@@ -1,23 +1,23 @@
 //@version=4
 //BB
 study(shorttitle="BB_MA_VWAP_KC", title="BB_MA_VWAP_KC", overlay=true, resolution="")
-length = input(21, minval=1)
-bbsrc = input(close, title="Source")
-mult = input(2.0, minval=0.001, maxval=50, title="StdDev")
+length = input(21, minval=1, title="BB Length")
+bbsrc = input(close, title="BB Source")
+mult = input(2.0, minval=0.001, maxval=50, title="BB StdDev")
 basis = ema(bbsrc, length)
 dev = mult * stdev(bbsrc, length)
 upper = basis + dev
 lower = basis - dev
-offset = input(0, "Offset", type = input.integer, minval = -500, maxval = 500)
+offset = input(0, "BB Offset", type = input.integer, minval = -500, maxval = 500)
 //plot(basis, "Basis", color=color.aqua, offset = offset)
-p1 = plot(upper, "Upper", color=color.teal, offset = offset)
-p2 = plot(lower, "Lower", color=color.teal, offset = offset)
-fill(p1, p2, title = "Background", color=#198787, transp=95)
+p1 = plot(upper, "BB Upper", color=color.teal, offset = offset, display=display.none)
+p2 = plot(lower, "BB Lower", color=color.teal, offset = offset, display=display.none)
+fill(p1, p2, title = "BB Background", color=#198787, transp=95)
 
 
 // Weekly VWAP \/
 
-vwapwsrc = input(title = "WSource", type = input.source, defval = hlc3)
+vwapwsrc = input(title = "Weekly VWAP Source", type = input.source, defval = hlc3)
 tw = time("W")
 startw = na(tw[1]) or tw > tw[1]
 
@@ -26,13 +26,13 @@ sumVolw = volume
 sumSrcw := startw ? sumSrcw : sumSrcw + sumSrcw[1]
 sumVolw := startw ? sumVolw : sumVolw + sumVolw[1]
 
-plot(sumSrcw / sumVolw, title="VWAPW", color=#d16cff)
+plot(sumSrcw / sumVolw, title="VWAPW", color=#d16cff, display=display.none)
 
 
 
 // Monthly VWAP \/
 
-vwapmsrc = input(title = "MSource", type = input.source, defval = hlc3)
+vwapmsrc = input(title = "Monthly VWAP Source", type = input.source, defval = hlc3)
 tm = time("M")
 startm = na(tm[1]) or tm > tm[1]
 
@@ -42,13 +42,13 @@ sumSrcm := startm ? sumSrcm : sumSrcm + sumSrcm[1]
 sumVolm := startm ? sumVolm : sumVolm + sumVolm[1]
 
 
-plot(sumSrcm / sumVolm, title="VWAPM", color = #b000ff)
+plot(sumSrcm / sumVolm, title="VWAPM", color = #FFF176, display=display.none)
 
 // You can use built-in vwap() function instead.
 
 // Yearly VWAP \/
 
-vwapysrc = input(title = "YSource", type = input.source, defval = hlc3)
+vwapysrc = input(title = "Yearly VWAP Source", type = input.source, defval = hlc3)
 ty = time("12M")
 starty = na(ty[1]) or ty > ty[1]
 
@@ -58,10 +58,9 @@ sumSrcy := starty ? sumSrcy : sumSrcy + sumSrcy[1]
 sumVoly := starty ? sumVoly : sumVoly + sumVoly[1]
 
 
-plot(sumSrcy / sumVoly, title="VWAPY", color = #8d00cc)
+plot(sumSrcy / sumVoly, title="VWAPY", color = #FBC02D, display=display.none)
 
 
-//@version=4
 //Color MA colors the moving average plot based on direction
 //MA types are:
 // 1 - simple
@@ -70,9 +69,9 @@ plot(sumSrcy / sumVoly, title="VWAPY", color = #8d00cc)
 // 4 - weighted
 // 5 - volume weighted
 
-lngth = input(21, minval=1, title="Length")
-src = input(close, title="Source")
-matype = input(2, minval=1, maxval=5, title="AvgType")
+lngth = input(21, minval=1, title="Color MA Length")
+src = input(close, title="Color MA Source")
+matype = input(2, minval=1, maxval=5, title="Color MA Type (1=SMA 2=EMA 3=Hull 4=WMA 5=VWMA)")
 
 simplema = sma(src,lngth)
 exponentialma = ema(src,lngth)
@@ -84,49 +83,49 @@ avgval = matype==1 ? simplema : matype==2 ? exponentialma : matype==3 ? hullma :
 Pcolor = avgval > avgval[1] ? color.green : color.red
 
 
-len1 = input(8, minval=1, title="Length")
-src1 = input(close, title="Source")
+len1 = input(8, minval=1, title="8 EMA Length")
+src1 = input(close, title="8 EMA Source")
 out8 = ema(src1, len1)
 
-len2 = input(50, minval=1, title="Length")
-src2 = input(close, title="Source")
+len2 = input(50, minval=1, title="50 MA Length")
+src2 = input(close, title="50 MA Source")
 out50 = sma(src2, len2)
 
-len3 = input(100, minval=1, title="Length")
-src3 = input(close, title="Source")
+len3 = input(100, minval=1, title="100 MA Length")
+src3 = input(close, title="100 MA Source")
 out100 = sma(src3, len3)
 
-len4 = input(200, minval=1, title="Length")
-src4 = input(close, title="Source")
+len4 = input(200, minval=1, title="200 MA Length")
+src4 = input(close, title="200 MA Source")
 out200 = sma(src4, len4)
 
-plot(out8, color=#fc9803, title="8 EMA", linewidth=1, transp = 25)
+plot(out8, color=#fc9803, title="8 EMA", linewidth=1, transp = 25, display=display.none)
 plot50 = plot(out50, color=#03DCE1, title="50 MA", linewidth=1, transp = 25)
 plot(out100, color=#E00095, title="100 MA", linewidth=1, transp = 25)
-plot(out200, color=#FFFFFF, title="200 MA", linewidth=1, transp = 25)
+plot(out200, color=#FFFFFF, title="200 MA", linewidth=3, transp = 25)
 plot21 = plot(avgval,title='Color EMA', color=Pcolor, linewidth=1, transp = 25)
 
-fill(plot21, plot50, color=avgval>out50? color.green:color.red, transp=75, editable=true)
+fill(plot21, plot50, title="Color EMA / 50 MA Fill", color=avgval>out50? color.green:color.red, transp=75, editable=true)
 
 //KELTNER CHANNELS
 
-KCsource1 = input(close, "1x MA source")
-KClength1 = input(21, "1x MA length", minval=1, step=5)
-KCma_type = input('ema', "1x MA type", options=['sma', 'ema', 'hma'])
-KCmult1 = input(1.0, "1x ATR multiplier", step=0.1)
-KCatr_length1 = input(0, "1x ATR length override", minval=0, step=5)
+KCsource1 = input(close, "KC 1x MA source")
+KClength1 = input(21, "KC 1x MA length", minval=1, step=5)
+KCma_type = input('ema', "KC 1x MA type", options=['sma', 'ema', 'hma'])
+KCmult1 = input(1.0, "KC 1x ATR multiplier", step=0.1)
+KCatr_length1 = input(0, "KC 1x ATR length override (0 = MA length)", minval=0, step=5)
 
-KCsource2 = input(close, "2x MA source")
-KClength2 = input(21, "2x MA length", minval=1, step=5)
-KCma_type2 = input('ema', "2x MA type", options=['sma', 'ema', 'hma'])
-KCmult2 = input(2.0, "2x ATR multiplier", step=0.1)
-KCatr_length2 = input(0, "2x ATR length override", minval=0, step=5)
+KCsource2 = input(close, "KC 2x MA source")
+KClength2 = input(21, "KC 2x MA length", minval=1, step=5)
+KCma_type2 = input('ema', "KC 2x MA type", options=['sma', 'ema', 'hma'])
+KCmult2 = input(2.0, "KC 2x ATR multiplier", step=0.1)
+KCatr_length2 = input(0, "KC 2x ATR length override (0 = MA length)", minval=0, step=5)
 
-KCsource3 = input(close, "3x MA source")
-KClength3 = input(21, "3x MA length", minval=1, step=5)
-KCma_type3 = input('ema', "3x MA type", options=['sma', 'ema', 'hma'])
-KCmult3 = input(3.0, "3x ATR multiplier", step=0.1)
-KCatr_length3 = input(0, "3x ATR length override", minval=0, step=5)
+KCsource3 = input(close, "KC 3x MA source")
+KClength3 = input(21, "KC 3x MA length", minval=1, step=5)
+KCma_type3 = input('ema', "KC 3x MA type", options=['sma', 'ema', 'hma'])
+KCmult3 = input(3.0, "KC 3x ATR multiplier", step=0.1)
+KCatr_length3 = input(0, "KC 3x ATR length override (0 = MA length)", minval=0, step=5)
 
 
 KCma1 = KCma_type == 'ema' ? ema(KCsource1, KClength1) : KCma_type == 'sma' ? sma(KCsource1, KClength1) : KCma_type == 'hma' ? hma(KCsource1, KClength1) : na
@@ -145,12 +144,12 @@ KCupper3 = KCma3 + KCatr3 * KCmult3
 KClower3 = KCma3 - KCatr3 * KCmult3
 
 
-KCplot_ux1= plot(KCupper1, transp=50, color = #8C26FF)
-KCplot_lx1 = plot(KClower1, transp=50, color = #8C26FF)
+// 1x = darkest purple, 3x = lightest purple
+KCplot_ux1 = plot(KCupper1, title="KC 1x Upper", transp=50, color = #8C26FF, display=display.none)
+KCplot_lx1 = plot(KClower1, title="KC 1x Lower", transp=50, color = #8C26FF, display=display.none)
 
+KCplot_ux2 = plot(KCupper2, title="KC 2x Upper", transp=50, color = #B97BFF)
+KCplot_lx2 = plot(KClower2, title="KC 2x Lower", transp=50, color = #B97BFF)
 
-KCplot_ux2 = plot(KCupper2, transp=50, color = #B97BFF)
-KCplot_lx2 = plot(KClower2, transp=50, color = #B97BFF)
-
-KCplot_ux3 = plot(KCupper3, transp=50, color = #d5b0ff)
-KCplot_lx3 = plot(KClower3, transp=50, color = #d5b0ff)
+KCplot_ux3 = plot(KCupper3, title="KC 3x Upper", transp=50, color = #d5b0ff)
+KCplot_lx3 = plot(KClower3, title="KC 3x Lower", transp=50, color = #d5b0ff)
